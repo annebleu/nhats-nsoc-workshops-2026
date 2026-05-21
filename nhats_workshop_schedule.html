@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f5f2ee;
+  padding: 20px 20px 40px 20px;
+  color: #222;
+}
+h1 {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2C1A0E;
+  margin-bottom: 5px;
+  letter-spacing: 0.03em;
+}
+.subtitle {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #7a6a5a;
+  margin-bottom: 16px;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 0 auto 22px auto;
+  background: white;
+  border-radius: 8px;
+  padding: 10px 16px;
+  max-width: 780px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #333;
+}
+.legend-swatch {
+  width: 13px; height: 13px; border-radius: 3px; flex-shrink: 0;
+}
+.schedule-wrapper {
+  display: flex;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.time-axis {
+  width: 44px;
+  position: relative;
+  height: 840px;
+  margin-top: 52px;
+  flex-shrink: 0;
+}
+.time-label {
+  position: absolute;
+  right: 7px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #bbb;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+.days-area {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.day-col {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.09);
+  background: white;
+}
+.day-header {
+  height: 52px;
+  padding: 8px 11px;
+  background: #02401B;
+  color: #F5F0E8;
+  font-weight: 700;
+  font-size: 0.78rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.day-subtitle {
+  font-size: 0.62rem;
+  font-weight: 400;
+  opacity: 0.82;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+.day-body {
+  position: relative;
+  height: 840px;
+}
+.hour-line {
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: rgba(0,0,0,0.07);
+  z-index: 1;
+  pointer-events: none;
+}
+.block {
+  position: absolute;
+  left: 0; right: 0;
+  display: flex;
+  z-index: 2;
+  overflow: hidden;
+  border-bottom: 1.5px solid transparent;
+}
+.block-bar {
+  width: 5px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+.block-inner {
+  flex: 1;
+  padding: 4px 6px;
+  min-width: 0;
+  overflow: hidden;
+}
+.block-time {
+  font-size: 0.56rem;
+  font-weight: 700;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.block-title {
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.3;
+}
+.block-who {
+  font-size: 0.58rem;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+.block-hw {
+  font-size: 0.56rem;
+  color: #5a3800;
+  background: rgba(255,203,5,0.18);
+  border-left: 2px solid #D4A800;
+  padding: 1px 4px;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.hw-label {
+  font-weight: 700;
+}
+.zoom-link {
+  font-size: 0.55rem;
+  color: #3B9AB2;
+  font-weight: 600;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Session colors */
+.bg-solo    { background: #F4EFF8; } .bar-solo    { background: #7B4F9E; } .sep-solo    { border-bottom-color: rgba(123,79,158,0.35); }
+.bg-lecture { background: #EEF7FA; } .bar-lecture { background: #3B9AB2; } .sep-lecture { border-bottom-color: rgba(59,154,178,0.35); }
+.bg-intro   { background: #FAF3F3; } .bar-intro   { background: #5B1A18; } .sep-intro   { border-bottom-color: rgba(91,26,24,0.30); }
+.bg-lunch   { background: #FFFDE5; } .bar-lunch   { background: #FFCB05; } .sep-lunch   { border-bottom-color: rgba(255,203,5,0.60); }
+.bg-office  { background: #EEF7F7; } .bar-office  { background: #1F7A7A; } .sep-office  { border-bottom-color: rgba(31,122,122,0.35); }
+.bg-present { background: #FFF7EC; } .bar-present { background: #F98400; } .sep-present { border-bottom-color: rgba(249,132,0,0.35); }
+</style>
+</head>
+<body>
+
+<h1>NHATS / NSOC Workshop Schedule</h1>
+<div class="subtitle">July 27&ndash;29, 2025 &nbsp;&middot;&nbsp; Virtual via Zoom</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch" style="background:#7B4F9E"></div>Solo / Prep Work</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#3B9AB2"></div>Lecture</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#5B1A18"></div>Introduction</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#1F7A7A"></div>Office Hours</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#F98400"></div>Presentations</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#FFCB05"></div>Lunch Break</div>
+</div>
+
+<div class="schedule-wrapper">
+
+  <div class="time-axis">
+    <div class="time-label" style="top:0px">9 AM</div>
+    <div class="time-label" style="top:120px">10 AM</div>
+    <div class="time-label" style="top:240px">11 AM</div>
+    <div class="time-label" style="top:360px">12 PM</div>
+    <div class="time-label" style="top:480px">1 PM</div>
+    <div class="time-label" style="top:600px">2 PM</div>
+    <div class="time-label" style="top:720px">3 PM</div>
+    <div class="time-label" style="top:840px">4 PM</div>
+  </div>
+
+  <div class="days-area">
+
+    <!-- ===== DAY 1 ===== -->
+    <!-- 9–10:Prep(120) 10–10:30:Intro(60) 10:30–11:30:Lecture(120) 11:30–12:30:Lunch(120) 12:30–1:Lecture(60) 1–2:30:Solo(180) 2:30–4:Present(180) = 840 -->
+    <div class="day-col">
+      <div class="day-header">
+        DAY 1 &middot; Monday, July 27
+        <div class="day-subtitle">Introduction &amp; File Review</div>
+      </div>
+      <div class="day-body">
+        <div class="hour-line" style="top:0"></div>
+        <div class="hour-line" style="top:120px"></div>
+        <div class="hour-line" style="top:240px"></div>
+        <div class="hour-line" style="top:360px"></div>
+        <div class="hour-line" style="top:480px"></div>
+        <div class="hour-line" style="top:600px"></div>
+        <div class="hour-line" style="top:720px"></div>
+        <div class="hour-line" style="top:840px"></div>
+
+        <!-- 9–10 AM | 60 min | top=0 h=120 -->
+        <div class="block bg-solo sep-solo" style="top:0;height:120px">
+          <div class="block-bar bar-solo"></div>
+          <div class="block-inner">
+            <div class="block-time">Before 10 AM</div>
+            <div class="block-title">Prepare for Day 1</div>
+            <div class="block-who">Attendees, on their own</div>
+            <div class="block-hw"><span class="hw-label">Homework:</span> Canvas Module #4 &middot; NSOC Modules: Using NSOC Parts 1, 2, and 3</div>
+          </div>
+        </div>
+
+        <!-- 10–10:30 AM | 30 min | top=120 h=60 -->
+        <div class="block bg-intro sep-intro" style="top:120px;height:60px">
+          <div class="block-bar bar-intro"></div>
+          <div class="block-inner">
+            <div class="block-time">10:00 &ndash; 10:30 AM</div>
+            <div class="block-title">Introduction Session</div>
+            <div class="block-who">Attendees &amp; NHATS Mentors</div>
+            <div class="zoom-link">Zoom</div>
+          </div>
+        </div>
+
+        <!-- 10:30–11:30 AM | 60 min | top=180 h=120 -->
+        <div class="block bg-lecture sep-lecture" style="top:180px;height:120px">
+          <div class="block-bar bar-lecture"></div>
+          <div class="block-inner">
+            <div class="block-time">10:30 &ndash; 11:30 AM</div>
+            <div class="block-title">Lecture: "Family Caregiving: A Brief Introduction for NSOC Users"</div>
+            <div class="block-who">Wolff &amp; Ornstein &middot; Attendees + Auditors</div>
+            <div class="zoom-link">Zoom</div>
+          </div>
+        </div>
+
+        <!-- 11:30 AM–12:30 PM | 60 min | top=300 h=120 -->
+        <div class="block bg-lunch sep-lunch" style="top:300px;height:120px">
+          <div class="block-bar bar-lunch"></div>
+          <div class="block-inner">
+            <div class="block-time">11:30 AM &ndash; 12:30 PM</div>
+            <div class="block-title" style="color:#7a6000;">Lunch Break</div>
+          </div>
+        </div>
+
+        <!-- 12:30–1:00 PM | 30 min | top=420 h=60 -->
+        <div class="block bg-lecture sep-lecture" style="top:420px;height:60px">
+          <div class="block-bar bar-lecture"></div>
+          <div class="block-inner">
+            <div class="block-time">12:30 &ndash; 1:00 PM</div>
+            <div class="block-title">Lecture: "Using NHATS &amp; NSOC Materials: The User Guide and More"</div>
+            <div class="block-who">Skehan &middot; Attendees + Auditors</div>
+          </div>
+        </div>
+
+        <!-- 1:00–2:30 PM | 90 min | top=480 h=180 -->
+        <div class="block bg-solo sep-solo" style="top:480px;height:180px">
+          <div class="block-bar bar-solo"></div>
+          <div class="block-inner">
+            <div class="block-time">1:00 &ndash; 2:30 PM</div>
+            <div class="block-title">Prepare to Merge &amp; Analyze Data</div>
+            <div class="block-who">Attendees, on their own</div>
+            <div class="block-hw"><span class="hw-label">Homework:</span> Review worksheet &middot; Download data &middot; Check variables</div>
+          </div>
+        </div>
+
+        <!-- 2:30–4:00 PM | 90 min | top=660 h=180 -->
+        <div class="block bg-present sep-present" style="top:660px;height:180px">
+          <div class="block-bar bar-present"></div>
+          <div class="block-inner">
+            <div class="block-time">2:30 &ndash; 4:00 PM</div>
+            <div class="block-title">Project Presentations</div>
+            <div class="block-who">Attendees &amp; NHATS Mentors</div>
+            <div class="block-hw"><span class="hw-label">Homework:</span> Prepare slides to introduce your project to the group</div>
+            <div class="zoom-link">Zoom</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DAY 2 ===== -->
+    <!-- 9–10:Prep(120) 10–11:30:Lecture(180) 11:30–12:30:Lunch(120) 12:30–1:30:Lecture(120) 1:30–3:Solo(180) 3–4:Office(120) = 840 -->
+    <div class="day-col">
+      <div class="day-header">
+        DAY 2 &middot; Tuesday, July 28
+        <div class="day-subtitle">File &amp; Sample Organization</div>
+      </div>
+      <div class="day-body">
+        <div class="hour-line" style="top:0"></div>
+        <div class="hour-line" style="top:120px"></div>
+        <div class="hour-line" style="top:240px"></div>
+        <div class="hour-line" style="top:360px"></div>
+        <div class="hour-line" style="top:480px"></div>
+        <div class="hour-line" style="top:600px"></div>
+        <div class="hour-line" style="top:720px"></div>
+        <div class="hour-line" style="top:840px"></div>
+
+        <!-- 9–10 AM | 60 min | top=0 h=120 -->
+        <div class="block bg-solo sep-solo" style="top:0;height:120px">
+          <div class="block-bar bar-solo"></div>
+          <div class="block-inner">
+            <div class="block-time">Before 10 AM</div>
+            <div class="block-title">Prepare for Day 2</div>
+            <div class="block-who">Attendees, on their own</div>
+            <div class="block-hw"><span class="hw-label">Homework:</span> Canvas #5: Merging (25 min) &middot; Canvas #6: Weighting (30 min) &middot; NSOC: Merging module (10 min)</div>
+          </div>
+        </div>
+
+        <!-- 10–11:30 AM | 90 min | top=120 h=180 -->
+        <div class="block bg-lecture sep-lecture" style="top:120px;height:180px">
+          <div class="block-bar bar-lecture"></div>
+          <div class="block-inner">
+            <div class="block-time">10:00 &ndash; 11:30 AM</div>
+            <div class="block-title">Lecture: "Merging NHATS &amp; NSOC Files"</div>
+            <div class="block-who">Mengyao Hu &middot; Attendees + Auditors</div>
+            <div class="zoom-link">Zoom</div>
+          </div>
+        </div>
+
+        <!-- 11:30 AM–12:30 PM | 60 min | top=300 h=120 -->
+        <div class="block bg-lunch sep-lunch" style="top:300px;height:120px">
+          <div class="block-bar bar-lunch"></div>
+          <div class="block-inner">
+            <div class="block-time">11:30 AM &ndash; 12:30 PM</div>
+            <div class="block-title" style="color:#7a6000;">Lunch Break</div>
+          </div>
+        </div>
+
+        <!-- 12:30–1:30 PM | 60 min | top=420 h=120 -->
+        <div class="block bg-lecture sep-lecture" style="top:420px;height:120px">
+          <div class="block-bar bar-lecture"></div>
+          <div class="block-inner">
+            <div class="block-time">12:30 &ndash; 1:30 PM</div>
+            <div class="block-title">Lecture: "Weighting and Sample Design in NHATS &amp; NSOC"</div>
+            <div class="block-who">Mengyao Hu &middot; Attendees + Auditors</div>
+            <div class="zoom-link">Zoom</div>
+          </div>
+        </div>
+
+        <!-- 1:30–3:00 PM | 90 min | top=540 h=180 -->
+        <div class="block bg-solo sep-solo" style="top:540px;height:180px">
+          <div class="block-bar bar-solo"></div>
+          <div class="block-inner">
+            <div class="block-time">1:30 &ndash; 3:00 PM</div>
+            <div class="block-title">Start Coding: Define Analytic Sample &amp; Merging Strategy</div>
+            <div class="block-who">Attendees, on their own</div>
+            <div class="block-hw"><span class="hw-label">Homework:</span> Update worksheet &middot; Write code &middot; Draft office hours questions</div>
+          </div>
+        </div>
+
+        <!-- 3:00–4:00 PM | 60 min | top=720 h=120 -->
+        <div class="block bg-office sep-office" style="top:720px;height:120px">
+          <div class="block-bar bar-office"></div>
+          <div class="block-inner">
+            <div class="block-time">3:00 &ndash; 4:00 PM</div>
+            <div class="block-title">One-on-One Office Hours</div>
+            <div class="block-who">Attendees &amp; NHATS Mentors</div>
+            <div class="block-hw"><span class="hw-label">Homework:</span> Update analyses based on faculty feedback</div>
+            <div class="zoom-link">Zoom</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DAY 3 ===== -->
+    <!-- 9–10:Solo(120) 10–11:30:Office(180) 11:30–12:30:Lunch(120) [gap 12:30–1:00=60] 1–2:30:Solo(180) 2:30–4:Present(180) = 840 -->
+    <div class="day-col">
+      <div class="day-header">
+        DAY 3 &middot; Wednesday, July 29
+        <div class="day-subtitle">Preliminary Analyses</div>
+      </div>
+      <div class="day-body">
+        <div class="hour-line" style="top:0"></div>
+        <div class="hour-line" style="top:120px"></div>
+        <div class="hour-line" style="top:240px"></div>
+        <div class="hour-line" style="top:360px"></div>
+        <div class="hour-line" style="top:480px"></div>
+        <div class="hour-line" style="top:600px"></div>
+        <div class="hour-line" style="top:720px"></div>
+        <div class="hour-line" style="top:840px"></div>
+
+        <!-- 9–10 AM | 60 min | top=0 h=120 -->
+        <div class="block bg-solo sep-solo" style="top:0;height:120px">
+          <div class="block-bar bar-solo"></div>
+          <div class="block-inner">
+            <div class="block-time">Before 10 AM</div>
+            <div class="block-title">Solo Work on Project</div>
+            <div class="block-who">Attendees, on their own</div>
+            <div class="block-hw"><span class="hw-label">Homework:</span> Continue coding &middot; Draft open office hours questions if needed</div>
+          </div>
+        </div>
+
+        <!-- 10–11:30 AM | 90 min | top=120 h=180 -->
+        <div class="block bg-office sep-office" style="top:120px;height:180px">
+          <div class="block-bar bar-office"></div>
+          <div class="block-inner">
+            <div class="block-time">10:00 &ndash; 11:30 AM</div>
+            <div class="block-title">Open Office Hours</div>
+            <div class="block-who">Optional for Attendees &middot; NHATS Mentors</div>
+            <div class="block-hw"><span class="hw-label">Homework:</span> Continue coding &middot; Update analyses based on faculty feedback</div>
+            <div class="zoom-link">Zoom</div>
+          </div>
+        </div>
+
+        <!-- 11:30 AM–12:30 PM | 60 min | top=300 h=120 -->
+        <div class="block bg-lunch sep-lunch" style="top:300px;height:120px">
+          <div class="block-bar bar-lunch"></div>
+          <div class="block-inner">
+            <div class="block-time">11:30 AM &ndash; 12:30 PM</div>
+            <div class="block-title" style="color:#7a6000;">Lunch Break</div>
+          </div>
+        </div>
+
+        <!-- 12:30–2:30 PM | 120 min | top=420 h=240 -->
+        <div class="block bg-solo sep-solo" style="top:420px;height:240px">
+          <div class="block-bar bar-solo"></div>
+          <div class="block-inner">
+            <div class="block-time">12:30 &ndash; 2:30 PM</div>
+            <div class="block-title">Solo Work on Project</div>
+            <div class="block-who">Attendees, on their own</div>
+            <div class="block-hw"><span class="hw-label">Homework:</span> Finalize results &middot; Add to presentation &middot; Email nhatshelp@umich.edu</div>
+          </div>
+        </div>
+
+        <!-- 2:30–4:00 PM | 90 min | top=660 h=180 -->
+        <div class="block bg-present sep-present" style="top:660px;height:180px">
+          <div class="block-bar bar-present"></div>
+          <div class="block-inner">
+            <div class="block-time">2:30 &ndash; 4:00 PM</div>
+            <div class="block-title">Final Presentations &amp; Wrap Up</div>
+            <div class="block-who">Attendees &amp; NHATS Mentors</div>
+            <div class="zoom-link">Zoom</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
