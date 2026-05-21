@@ -45,9 +45,7 @@ h1 {
   font-weight: 600;
   color: #333;
 }
-.legend-swatch {
-  width: 13px; height: 13px; border-radius: 3px; flex-shrink: 0;
-}
+.legend-swatch { width: 13px; height: 13px; border-radius: 3px; flex-shrink: 0; }
 .schedule-wrapper {
   display: flex;
   max-width: 900px;
@@ -100,11 +98,8 @@ h1 {
   letter-spacing: 0.04em;
   margin-top: 2px;
 }
-/* Scale: 2.4px/min | 9AM–4PM = 420min = 1008px */
-.day-body {
-  position: relative;
-  height: 1400px;
-}
+/* Scale: 200px/hr | 9AM–4PM = 420min = 1400px */
+.day-body { position: relative; height: 1400px; }
 .hour-line {
   position: absolute;
   left: 0; right: 0;
@@ -121,87 +116,55 @@ h1 {
   overflow: hidden;
   border-bottom: 1.5px solid transparent;
 }
-.block-bar {
-  width: 5px;
-  flex-shrink: 0;
-  align-self: stretch;
-}
-.block-inner {
-  flex: 1;
-  padding: 4px 6px;
-  min-width: 0;
-  overflow: hidden;
-}
+.block-bar { width: 5px; flex-shrink: 0; align-self: stretch; }
+.block-inner { flex: 1; padding: 4px 6px; min-width: 0; overflow: hidden; }
 .block-time {
-  font-size: 0.81rem;
-  font-weight: 700;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 0.81rem; font-weight: 700; color: #999;
+  text-transform: uppercase; letter-spacing: 0.02em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.block-title {
-  font-size: 0.91rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  line-height: 1.3;
-}
+.block-title { font-size: 0.91rem; font-weight: 600; color: #1a1a1a; line-height: 1.3; }
 .block-who {
-  font-size: 0.83rem;
-  color: #555;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 1px;
+  font-size: 0.83rem; color: #555;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px;
 }
 .block-hw {
-  font-size: 0.81rem;
-  color: #5a3800;
+  font-size: 0.81rem; color: #5a3800;
   background: rgba(255,203,5,0.18);
   border-left: 2px solid #D4A800;
-  padding: 1px 4px;
-  margin-top: 3px;
-  line-height: 1.45;
+  padding: 1px 4px; margin-top: 3px; line-height: 1.45;
 }
 .hw-label { font-weight: 700; }
 .zoom-link {
-  font-size: 0.8rem;
-  color: #3B9AB2;
-  font-weight: 600;
-  margin-top: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 0.8rem; color: #3B9AB2; font-weight: 600;
+  margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .zoom-link a { color: #3B9AB2; text-decoration: underline; }
-/* Session colors */
 .bg-solo    { background: #F4EFF8; } .bar-solo    { background: #7B4F9E; } .sep-solo    { border-bottom-color: rgba(123,79,158,0.35); }
-.bg-lecture { background: #EEF7FA; } .bar-lecture { background: #3B9AB2; } .sep-lecture { border-bottom-color: rgba(59,154,178,0.35); }
+.bg-lecture { background: #E8EEFF; } .bar-lecture { background: #2979FF; } .sep-lecture { border-bottom-color: rgba(41,121,255,0.35); }
 .bg-intro   { background: #FAF3F3; } .bar-intro   { background: #5B1A18; } .sep-intro   { border-bottom-color: rgba(91,26,24,0.30); }
 .bg-lunch   { background: #FFFDE5; } .bar-lunch   { background: #FFCB05; } .sep-lunch   { border-bottom-color: rgba(255,203,5,0.60); }
-.bg-office  { background: #EEF7F7; } .bar-office  { background: #1F7A7A; } .sep-office  { border-bottom-color: rgba(31,122,122,0.35); }
+.bg-office  { background: #E8F8EF; } .bar-office  { background: #27AE60; } .sep-office  { border-bottom-color: rgba(39,174,96,0.35); }
 .bg-present { background: #FFF7EC; } .bar-present { background: #F98400; } .sep-present { border-bottom-color: rgba(249,132,0,0.35); }
 </style>
 </head>
 <body>
 
-<h1>NSOC Workshop Schedule</h1>
-<div class="subtitle">July 27&ndash;29, 2025 &nbsp;&middot;&nbsp; Virtual via Zoom</div>
+<h1>NHATS Workshop Schedule</h1>
+<div class="subtitle">June 23&ndash;25, 2025 &nbsp;&middot;&nbsp; Virtual via Zoom</div>
 
 <div class="legend">
   <div class="legend-item"><div class="legend-swatch" style="background:#7B4F9E"></div>Solo / Prep Work</div>
-  <div class="legend-item"><div class="legend-swatch" style="background:#3B9AB2"></div>Lecture</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#2979FF"></div>Lecture</div>
   <div class="legend-item"><div class="legend-swatch" style="background:#5B1A18"></div>Introduction</div>
-  <div class="legend-item"><div class="legend-swatch" style="background:#1F7A7A"></div>Office Hours</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#27AE60"></div>Office Hours</div>
   <div class="legend-item"><div class="legend-swatch" style="background:#F98400"></div>Presentations</div>
   <div class="legend-item"><div class="legend-swatch" style="background:#FFCB05"></div>Lunch Break</div>
 </div>
 
 <div class="schedule-wrapper">
 
-  <!-- Time axis: 2.4px/min | labels at each hour -->
+  <!-- Time axis: 200px/hr | 9AM–4PM = 1400px -->
   <div class="time-axis">
     <div class="time-label" style="top:0px">9 AM</div>
     <div class="time-label" style="top:200px">10 AM</div>
@@ -216,7 +179,6 @@ h1 {
   <div class="days-area">
 
     <!-- ===== DAY 1 ===== -->
-    <!-- prep(144) intro(72) lec(144) lunch(144) lec(72) solo(216) present(216) = 1008 -->
     <div class="day-col">
       <div class="day-header">
         DAY 1 &middot; Monday, July 27
